@@ -1,5 +1,4 @@
 require_relative "exif_date_reader"
-require "awesome_print"
 require "fileutils"
 
 class ImageRenamer
@@ -8,15 +7,22 @@ class ImageRenamer
     @images = images
   end
 
-  def chronological!
-    list = @images.
+  def chronological!(dry_run: false)
+    @images.
       map { |image| [image, ExifDateReader.call(image)] }.
-      sort_by { |file, date| date }
+      sort_by { |file, date| date }.
+      each_with_index do |(file, date), index|
+        newname = date.strftime(filename_template(index+1))
+        if dry_run
+          puts "Renaming #{file} to #{newname}"
+        else
+          FileUtils.mv(file, File.join(File.dirname(file), newname))
+        end
+      end
+  end
 
-    list.each_with_index do |(file, date), index|
-      newname = date.strftime("%Y-%m-%d-%H%M_image_#{("%03d" % (index+1))}.jpg")
-      FileUtils.mv(file, File.join(File.dirname(file), newname))
-    end
+  def filename_template(index)
+    "%Y-%m-%d-%H%M_image_#{("%03d" % index)}.jpg"
   end
 
 end
