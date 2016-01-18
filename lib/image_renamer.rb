@@ -12,10 +12,14 @@ class ImageRenamer
       map { |image| [image, ExifDateReader.call(image)] }.
       sort_by { |file, date| date }.
       each_with_index do |(file, date), index|
-        newname = date.strftime(filename_template(index+1))
-        unless newname == File.basename(file)
-          puts "#{File.basename(file)} -> #{newname}" if verbose
-          FileUtils.mv(file, File.join(File.dirname(file), newname)) unless dry_run
+        begin
+          newname = date.strftime(filename_template(index+1))
+          unless newname == File.basename(file)
+            puts "#{File.basename(file)} -> #{newname}" if verbose
+            FileUtils.mv(file, File.join(File.dirname(file), newname)) unless dry_run
+          end
+        rescue
+          fail "Error renaming #{file} (#{date})"
         end
       end
   end
