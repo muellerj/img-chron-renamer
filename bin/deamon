@@ -1,0 +1,8 @@
+#!/bin/sh
+
+fswatch --exclude=.DS_Store -0 . | \
+while read -d "" event
+do
+  echo "Change in `dirname ${event}`"
+  img-chron-rename `dirname ${event}`/*.jpg
+done
