@@ -8,7 +8,7 @@ Given(/^I have a folder with the following images$/) do |table|
 end
 
 When(/^I invoke the renamer in that directory$/) do
-  def ExifDateReader.call(file)
+  def DateReader.call(file)
     DateTime.parse(File.read(file))
   end
   ImageRenamer.new(Dir.glob(File.join(@dir, "*.jpg"))).chronological!
