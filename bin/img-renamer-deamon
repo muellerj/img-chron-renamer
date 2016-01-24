@@ -7,4 +7,5 @@ do
   eventdir=`dirname ${event}`
   echo "Change in ${eventdir}"
   img-chron-rename ${eventdir}
+  sleep 1
 done
