@@ -2,4 +2,4 @@
 
 require_relative "../lib/image_renamer"
 
-ImageRenamer.new(ARGV).chronological!(verbose: true)
+ImageRenamer.new(ARGV.first).chronological!(verbose: true)

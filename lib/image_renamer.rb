@@ -3,8 +3,8 @@ require "fileutils"
 
 class ImageRenamer
 
-  def initialize(images)
-    @images = images
+  def initialize(image_dir)
+    @images = Dir.glob(File.join(image_dir, "*.jpg"))
   end
 
   def chronological!(dry_run: false, verbose: false)

@@ -1,10 +1,10 @@
 #!/bin/zsh
 
-fswatch --exclude=.DS_Store -0 . | \
+# Watch all files in given file hirarchy
+fswatch --exclude=.DS_Store -0 $1 | \
 while read -d "" event
 do
-  eventdir=`dirname #{event}`
+  eventdir=`dirname ${event}`
   echo "Change in ${eventdir}"
-  ls ${eventdir}/*.JPG | while read file; do mv ${file} ${file:l}; done
-  img-chron-rename `dirname ${event}`/*.jpg
+  #img-chron-rename ${eventdir}
 done
