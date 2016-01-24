@@ -6,5 +6,5 @@ while read -d "" event
 do
   eventdir=`dirname ${event}`
   echo "Change in ${eventdir}"
-  #img-chron-rename ${eventdir}
+  img-chron-rename ${eventdir}
 done
