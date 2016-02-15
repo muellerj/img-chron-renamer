@@ -4,7 +4,7 @@ require "fileutils"
 class ImageRenamer
 
   def initialize(image_dir)
-    @images = Dir.glob(File.join(image_dir, "*.{jpg,JPG}"))
+    @images = Dir.glob(File.join(image_dir, "*.jpg"), File::FNM_CASEFOLD)
   end
 
   def chronological!(dry_run: false, verbose: false)
@@ -13,7 +13,7 @@ class ImageRenamer
       sort_by { |file, date| date }.
       each_with_index do |(file, date), index|
         newname = date.strftime(filename_template(index+1))
-        unless newname == File.basename(file)
+        unless newname.downcase == File.basename(file).downcase
           puts "#{File.basename(file)} -> #{newname}" if verbose
           FileUtils.mv(file, File.join(File.dirname(file), newname)) unless dry_run
         end

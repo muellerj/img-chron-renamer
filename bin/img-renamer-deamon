@@ -3,11 +3,4 @@
 basedir=$(dirname $0)
 
 # Watch all files in given file hirarchy
-fswatch --exclude=.DS_Store -0 $1 | \
-while read -d "" event
-do
-  eventdir=`dirname ${event}`
-  echo "Change in ${eventdir}"
-  ${basedir}/img-chron-rename ${eventdir}
-  sleep 1
-done
+fswatch --exclude=.DS_Store $1 | ${basedir}/enqueuer

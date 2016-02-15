@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+require_relative "../lib/image_renamer"
+
+puts "Starting..."
+
+class UniqueQueue
+  class Element < Struct.new(:directory, :time)
+    def eql?(other); self.directory == other.directory end
+    def hash; self.directory.hash end
+  end
+
+  def initialize
+    @store = Array.new
+  end
+
+  def pop
+    @store.pop if @store.last && (Time.now - @store.last.time) > 3
+  end
+
+  def push(directory:, time: Time.now)
+    @store.unshift(Element.new(directory, time)).uniq!
+  end
+end
+
+queue = UniqueQueue.new
+worker = Thread.new do
+  loop do
+    sleep 1
+    queue_item = queue.pop
+    unless queue_item.nil?
+      puts "Processing '#{queue_item.directory}'" 
+      ImageRenamer.new(queue_item.directory).chronological!(verbose: true)
+    end
+  end
+end
+
+loop do
+  queue.push(directory: File.dirname(STDIN.gets.chomp))
+end
+
+worker.join
