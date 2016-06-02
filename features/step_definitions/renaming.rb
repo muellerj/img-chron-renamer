@@ -11,7 +11,7 @@ When(/^I invoke the renamer in that directory$/) do
   def DateReader.call(file)
     DateTime.parse(File.read(file))
   end
-  ImageRenamer.new(Dir.glob(File.join(@dir, "*.jpg"))).chronological!
+  ImageRenamer.new(@dir).chronological!
 end
 
 Then(/^listing the content of the folder should yield the following result$/) do |string|
