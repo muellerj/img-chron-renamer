@@ -15,13 +15,26 @@ class ImageRenamer
         newname = date.strftime(filename_template(index+1))
         unless newname.downcase == File.basename(file).downcase
           puts "#{File.basename(file)} -> #{newname}" if verbose
-          FileUtils.mv(file, File.join(File.dirname(file), newname)) unless dry_run
+          unless dry_run
+            FileUtils.mv(file, File.join(File.dirname(file), newname))
+            associated_movie(file).tap do |movie|
+              if File.exist?(movie)
+                FileUtils.mv(movie, File.join(File.dirname(movie), newname.gsub(/\.jpg$/, ".mov")))
+              end
+            end
+          end
         end
       end
   end
 
   def filename_template(index)
     "%Y-%m-%d-%H%M_image_#{("%03d" % index)}.jpg"
+  end
+
+  def associated_movie(image)
+    image.
+      gsub(/\.JPG$/, ".MOV").
+      gsub(/\.jpg$/, ".mov")
   end
 
 end

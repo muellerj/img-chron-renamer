@@ -17,3 +17,21 @@ Feature: Renaming images
       2015-12-01-1631_image_003.jpg
       """
 
+  Scenario: Renaming live images
+    Given I have a folder with the following images
+      | name          | exif date        |
+      | IMG_2882.JPG  | 2015-12-01 16:30 |
+      | IMG_2882.MOV  | 2015-12-01 16:30 |
+      | IMG_2883.JPG  | 2015-12-01 16:32 |
+      | IMG_2883.MOV  | 2015-12-01 16:32 |
+      | IMG_2885.JPG  | 2015-12-01 16:52 |
+    When I invoke the renamer in that directory
+    Then listing the content of the folder should yield the following result
+      """
+      2015-12-01-1630_image_001.jpg
+      2015-12-01-1630_image_001.mov
+      2015-12-01-1632_image_002.jpg
+      2015-12-01-1632_image_002.mov
+      2015-12-01-1652_image_003.jpg
+      """
+
