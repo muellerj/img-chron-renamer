@@ -14,12 +14,15 @@ class ImageRenamer
       each_with_index do |(file, date), index|
         newname = date.strftime(filename_template(index+1))
         unless newname.downcase == File.basename(file).downcase
-          puts "#{File.basename(file)} -> #{newname}" if verbose
           unless dry_run
-            FileUtils.mv(file, File.join(File.dirname(file), newname))
             associated_movie(file).tap do |movie|
               if File.exist?(movie)
+                puts "#{File.basename(file)} -> #{newname} (Live Photo)" if verbose
                 FileUtils.mv(movie, File.join(File.dirname(movie), newname.gsub(/\.jpg$/, ".mov")))
+                FileUtils.mv(file, File.join(File.dirname(file), newname))
+              else
+                puts "#{File.basename(file)} -> #{newname}" if verbose
+                FileUtils.mv(file, File.join(File.dirname(file), newname))
               end
             end
           end
